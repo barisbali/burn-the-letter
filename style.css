@@ -1,0 +1,792 @@
+:root {
+    /* Dark theme (default) */
+    --bg-color: #32271c;
+    --text-color: #d8c3a5;
+    --heading-color: #f4e1c1;
+    --textarea-bg: #3b2b1a;
+    --textarea-color: #e6d0b2;
+    --textarea-border: #5a463a;
+    --button-bg: #8b4513;
+    --button-hover: #a0522d;
+    --subtitle-color: #b89b75;
+    --rage-gradient-start: #1a0000;
+    --rage-gradient-end: #660000;
+    --rage-border: #ff0000;
+    --rage-text: #fff;
+}
+
+[data-theme="light"] {
+    --bg-color: #f5e6d3;
+    --text-color: #2c1810;
+    --heading-color: #4a2511;
+    --textarea-bg: #fff;
+    --textarea-color: #2c1810;
+    --textarea-border: #8b4513;
+    --button-bg: #a0522d;
+    --button-hover: #8b4513;
+    --subtitle-color: #5a463a;
+    --rage-gradient-start: #990000;
+    --rage-gradient-end: #660000;
+    --rage-border: #ff0000;
+    --rage-text: #fff;
+}
+
+/* Rage mode specific variables */
+[data-mode="rage"] {
+    --bg-color: #1a0000;
+    --text-color: #ff3333;
+    --heading-color: #ff0000;
+    --textarea-bg: #0a0000;
+    --textarea-color: #ff4444;
+    --textarea-border: #ff0000;
+    --button-bg: #cc0000;
+    --button-hover: #ff0000;
+}
+
+/* Love theme */
+[data-mode="love"] {
+    --bg-color: #fff0f3;
+    --text-color: #ff69b4;
+    --heading-color: #ff1493;
+    --textarea-bg: #fff9fb;
+    --textarea-color: #ff69b4;
+    --textarea-border: #ffb6c1;
+    --button-bg: #ff69b4;
+    --button-hover: #ff1493;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: var(--heading-color);
+    margin-bottom: 5px;
+    font-size: 2rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+p {
+    color: var(--subtitle-color);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+textarea {
+    width: 80%;
+    max-width: 600px;
+    height: 300px;
+    margin-bottom: 20px;
+    padding: 15px;
+    font-size: 1rem;
+    border: 1px solid var(--textarea-border);
+    border-radius: 8px;
+    background-color: var(--textarea-bg);
+    color: var(--textarea-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    line-height: 1.5;
+    resize: vertical;
+    transition: opacity 0.6s ease-out, box-shadow 0.3s ease;
+    font-family: 'Courier New', monospace; /* Old typewriter effect */
+}
+
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(244, 225, 193, 0.6);
+}
+
+/* --- Burning effect --- */
+textarea.burning {
+    opacity: 0;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+}
+
+audio {
+    display: none;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+#theme-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transform: scale(0.7);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.modal h2 {
+    color: var(--heading-color);
+    margin-bottom: 15px;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: transform 0.1s ease;
+}
+
+.modal-button.confirm {
+    background-color: #d64545;
+}
+
+.modal-button.confirm:hover {
+    background-color: #b83b3b;
+}
+
+@keyframes burn {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+        opacity: 1;
+        background: var(--textarea-bg);
+    }
+    30% {
+        box-shadow: 0 0 20px rgba(255, 107, 0, 0.8),
+                    0 0 40px rgba(255, 42, 0, 0.6);
+        background: linear-gradient(to bottom, var(--textarea-bg) 0%, #ff4500 150%);
+    }
+    100% {
+        box-shadow: 0 0 40px rgba(255, 42, 0, 0);
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+}
+
+@keyframes ember-float {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(var(--x-offset)) rotate(var(--rotation));
+        opacity: 0;
+    }
+}
+
+@keyframes ash-fall {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100px) translateX(var(--x-offset));
+        opacity: 0;
+    }
+}
+
+textarea.burning {
+    animation: burn 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+/* Add ember particles effect */
+@keyframes ember {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(0);
+        opacity: 0;
+    }
+}
+
+.ember {
+    position: fixed;
+    width: var(--size);
+    height: var(--size);
+    background: radial-gradient(circle at center, #ff6b00, #ff4500);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.ash {
+    position: fixed;
+    width: var(--size);
+    height: var(--size);
+    background: #444;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999;
+    filter: blur(1px);
+}
+
+.word-count {
+    width: 80%;
+    max-width: 600px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.word-count-bar {
+    width: 100%;
+    height: 4px;
+    background-color: var(--textarea-border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+#word-count-progress {
+    height: 100%;
+    width: 0%;
+    background-color: var(--button-bg);
+    transition: width 0.3s ease;
+}
+
+#word-count {
+    font-weight: bold;
+    color: var(--heading-color);
+}
+
+/* Add Google Fonts link in your HTML head */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+
+.text-controls {
+    width: 80%;
+    max-width: 600px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.text-control {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--textarea-border);
+    background-color: var(--textarea-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    cursor: pointer;
+    flex: 1;
+}
+
+.text-control:hover {
+    border-color: var(--button-bg);
+}
+
+.text-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--button-bg);
+}
+
+/* Rage button styling */
+.rage-button {
+    background: linear-gradient(45deg, #800000, #ff0000);
+    border: 2px solid #ff0000;
+    text-shadow: 0 0 5px #ff0000;
+    transition: all 0.3s ease;
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #1a0000, #660000);
+    border: 2px solid #ff0000;
+    color: #fff;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 0 15px rgba(255, 0, 0, 0.2),
+        inset 0 0 15px rgba(255, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.rage-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 0, 0, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.rage-button:hover {
+    transform: translateZ(10px);
+    box-shadow: 
+        0 0 30px rgba(255, 0, 0, 0.3),
+        inset 0 0 15px rgba(255, 0, 0, 0.5);
+    background: linear-gradient(45deg, #660000, #990000);
+}
+
+.rage-button:hover::before {
+    left: 100%;
+}
+
+.rage-button:active {
+    transform: translateZ(0);
+}
+
+/* Active state for rage mode */
+.rage-button.active {
+    background: linear-gradient(45deg, #990000, #ff0000);
+    animation: pulse 2s infinite;
+    box-shadow: 
+        0 0 30px rgba(255, 0, 0, 0.5),
+        inset 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateZ(5px) scale(1);
+    }
+    50% {
+        transform: translateZ(10px) scale(1.02);
+    }
+}
+
+/* Rage mode animations */
+@keyframes shake-rage {
+    0%, 100% { 
+        transform: translateX(0) rotate(0); 
+    }
+    25% { 
+        transform: translateX(-3px) rotate(-0.5deg); 
+    }
+    75% { 
+        transform: translateX(3px) rotate(0.5deg); 
+    }
+}
+
+@keyframes flash-bg {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
+        background-color: var(--bg-color); 
+    }
+    20%, 24%, 55% { 
+        background-color: #300; 
+    }
+}
+
+@keyframes text-glow {
+    0%, 100% { text-shadow: 0 0 5px #ff0000; }
+    50% { text-shadow: 0 0 15px #ff0000; }
+}
+
+/* Rage mode active states */
+[data-mode="rage"] textarea {
+    animation: subtle-shake 3s infinite ease-in-out;
+    border-color: #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+[data-mode="rage"] textarea::first-line {
+    color: #ff4444;
+}
+
+@keyframes subtle-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+@keyframes text-rage {
+    0%, 100% { 
+        transform: translateX(0) translateY(0);
+        text-shadow: 0 0 0 rgba(255, 0, 0, 0);
+    }
+    25% { 
+        transform: translateX(-1px) translateY(1px);
+        text-shadow: -1px 0 0 rgba(255, 0, 0, 0.5);
+    }
+    75% { 
+        transform: translateX(1px) translateY(-1px);
+        text-shadow: 1px 0 0 rgba(255, 0, 0, 0.5);
+    }
+}
+
+[data-mode="rage"] textarea:focus {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+[data-mode="rage"] .burn-button {
+    animation: text-glow 2s infinite;
+}
+
+[data-mode="rage"] body {
+    animation: flash-bg 2s infinite;
+    transition: background-color 0.2s ease;
+}
+
+[data-mode="rage"] .rage-button {
+    animation: text-glow 1s infinite;
+    background-color: #ff0000;
+}
+
+/* Love mode active states */
+[data-mode="love"] textarea {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+}
+
+[data-mode="love"] .burn-button {
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+}
+
+/* Love particles animation */
+@keyframes float-heart {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+.love-particle {
+    position: fixed;
+    font-size: 16px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: float-heart 3s ease-out forwards;
+}
+
+/* Burn effect variations */
+@keyframes burn-classic {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        box-shadow: 0 0 40px rgba(255, 42, 0, 0);
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes burn-blue {
+    0% {
+        box-shadow: 0 0 20px rgba(0, 149, 255, 0.5);
+        opacity: 1;
+        background: linear-gradient(to bottom, var(--textarea-bg), #0066ff);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 0 0 40px rgba(0, 102, 255, 0);
+        opacity: 0;
+        transform: scale(0.95) translateY(5px);
+    }
+}
+
+@keyframes burn-spiral {
+    0% {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(720deg) scale(0);
+    }
+}
+
+@keyframes burn-fade {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(10px);
+        transform: scale(1.1);
+    }
+}
+
+/* Add these classes for each burn effect */
+textarea.burning-classic {
+    animation: burn-classic 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+textarea.burning-blue {
+    animation: burn-blue 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+textarea.burning-spiral {
+    animation: burn-spiral 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+textarea.burning-fade {
+    animation: burn-fade 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+/* Remove or comment out the generic burning class */
+/* textarea.burning {
+    animation: burn 1.5s ease-out forwards;
+    pointer-events: none;
+} */
+
+/* Ember colors for different effects */
+.ember.classic { background: radial-gradient(circle at center, #ff6b00, #ff4500); }
+.ember.blue { background: radial-gradient(circle at center, #00bfff, #0066ff); }
+.ember.spiral { background: radial-gradient(circle at center, #ff3399, #ff0066); }
+.ember.fade { background: radial-gradient(circle at center, #ffcc00, #ff9900); }
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#save-button {
+    background-color: var(--button-bg);
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+.modal-content.warning {
+    border: 2px solid #ffd700;
+    background-color: var(--bg-color);
+}
+
+.modal-content.warning h2 {
+    color: #ffd700;
+}
+
+#confirm-save {
+    background-color: #666;
+    opacity: 0.8;
+}
+
+#confirm-save:hover {
+    opacity: 1;
+}
+
+#cancel-save {
+    background-color: var(--button-bg);
+}
+
+.main-action {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.primary-button {
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    background: linear-gradient(45deg, var(--button-bg), #ff4500);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4);
+}
+
+.secondary-actions {
+    margin-top: 40px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.save-hint {
+    display: block;
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.secondary-button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    background-color: transparent;
+    border: 1px solid var(--button-bg);
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+    opacity: 1;
+    background-color: var(--textarea-bg);
+}
+
+.mode-toggle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    perspective: 1000px;
+}
+
+.info-button-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.info-button {
+    background: transparent;
+    border: 2px solid var(--button-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.info-button:hover {
+    opacity: 1;
+    background: var(--textarea-bg);
+    transform: translateY(-2px);
+}
+
+.info-modal .modal-content {
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+.info-text {
+    text-align: left;
+    line-height: 1.6;
+}
+
+.info-text .intro {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: var(--heading-color);
+}
+
+.info-text .benefits {
+    margin: 25px 0;
+}
+
+.info-text ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.info-text li {
+    margin: 10px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+.info-text .highlight {
+    margin: 25px 0;
+    padding: 20px;
+    border-left: 3px solid var(--button-bg);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.info-text .closing {
+    font-style: italic;
+    margin-top: 25px;
+    color: var(--heading-color);
+}
+
+.info-modal #close-info {
+    margin-top: 20px;
+    background: var(--button-bg);
+    color: white;
+}
+
+

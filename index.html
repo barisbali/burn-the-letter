@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Burn Letter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="theme-toggle">
+        <button id="theme-button">Switch Theme 🌓</button>
+    </div>
+    
+    <div class="mode-toggle">
+        <button id="rage-button" class="rage-button">RAGE MODE 🔥</button>
+    </div>
+    
+    <h1>Write & Burn</h1>
+    <p>Write down your thoughts, then click the button to let them go.</p>
+
+    <div class="text-controls">
+        <select id="font-selector" class="text-control">
+            <option value="'Georgia', serif">Classic</option>
+            <option value="'Courier New', monospace" selected>Typewriter</option>
+            <option value="'Dancing Script', cursive">Handwritten</option>
+            <option value="'Arial', sans-serif">Modern</option>
+        </select>
+        <select id="font-size" class="text-control">
+            <option value="14">Small</option>
+            <option value="16" selected>Medium</option>
+            <option value="18">Large</option>
+            <option value="20">Extra Large</option>
+        </select>
+        <select id="burn-effect" class="text-control">
+            <option value="classic">Classic Burn 🔥</option>
+            <option value="blue">Blue Flame 🌀</option>
+            <option value="spiral">Spiral Burn 🌪️</option>
+            <option value="fade">Fade Away ✨</option>
+        </select>
+    </div>
+    <textarea id="letter-text" placeholder="Pour your feelings out here..."></textarea>
+    <div class="word-count">
+        <span id="word-count">0</span> words
+        <div class="word-count-bar">
+            <div id="word-count-progress"></div>
+        </div>
+    </div>
+    
+    <div class="main-action">
+        <button id="burn-button" class="primary-button">Burn It 🔥</button>
+    </div>
+
+    <div class="secondary-actions">
+        <small class="save-hint">Don't want to let go yet?</small>
+        <button id="save-button" class="secondary-button">Save Letter 💾</button>
+    </div>
+
+    <div class="info-button-container">
+        <button id="why-button" class="info-button">Why?</button>
+    </div>
+
+    <audio id="burn-sound" src="burning-sound.mp3" preload="auto"></audio>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>Are you sure?</h2>
+            <p>This letter will be permanently deleted. This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="cancel-burn" class="modal-button">Cancel</button>
+                <button id="confirm-burn" class="modal-button confirm">Burn It 🔥</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="save-modal" class="modal">
+        <div class="modal-content warning">
+            <h2>Are you sure? 🤨</h2>
+            <p>You're not supposed to save it... but if you really want to...</p>
+            <div class="modal-buttons">
+                <button id="cancel-save" class="modal-button">No, let it go</button>
+                <button id="confirm-save" class="modal-button confirm">Yes, save it</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="info-modal" class="modal info-modal">
+        <div class="modal-content info-content">
+            <h2>🕊 Why Write… and Burn?</h2>
+            <div class="info-text">
+                <p class="intro">Sometimes, the thoughts we carry feel too heavy to keep, but too personal to share.
+                Burn the Letter gives you a quiet space to pour those thoughts out — and let them go.</p>
+                
+                <div class="benefits">
+                    <p>Writing about your emotions, even just for yourself, has been shown in psychology to:</p>
+                    <ul>
+                        <li>✍️ Clarify your feelings and reduce mental clutter</li>
+                        <li>🧠 Regulate your emotions through expression</li>
+                        <li>💡 Help you process difficult experiences and gain perspective</li>
+                        <li>❤️ Offer relief from stress, anxiety, and emotional overwhelm</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight">
+                    <p>But the most freeing part?</p>
+                    <p>You don't have to keep the letter. You don't even have to read it again.<br>
+                    You simply let it go. Watch it burn.<br>
+                    And maybe, just maybe, you feel a little lighter.</p>
+                </div>
+                
+                <p class="closing">This isn't about productivity or tracking your mood — it's about release.<br>
+                A digital ritual for the things you didn't know you needed to let go of.</p>
+            </div>
+            <button id="close-info" class="modal-button">Got it</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
