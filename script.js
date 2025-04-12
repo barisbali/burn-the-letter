@@ -53,6 +53,23 @@ const whyButton = document.getElementById('why-button');
 const infoModal = document.getElementById('info-modal');
 const closeInfo = document.getElementById('close-info');
 
+// Add to your constants at the top
+const romanticMusic = document.getElementById('romantic-music');
+const stopMusicButton = document.getElementById('stop-music');
+let isMusicPlaying = false;
+
+// Add a new flag to track if music was manually stopped
+let musicManuallyPaused = false;
+
+// Add to your constants at the top
+const rageMusic = document.getElementById('rage-music');
+let currentMusicMode = null; // 'love' or 'rage'
+
+// Add to your constants at the top
+const fireplaceSound = document.getElementById('fireplace-sound');
+const fireplaceToggle = document.getElementById('fireplace-toggle');
+let isFireplacePlaying = false;
+
 // Theme switching functionality
 let currentTheme = 'dark';
 
@@ -89,6 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentBurnEffect = savedBurnEffect;
         burnEffect.value = savedBurnEffect;
     }
+
+    const savedFireplaceState = localStorage.getItem('fireplaceOn') === 'true';
+    if (savedFireplaceState) {
+        fireplaceToggle.click();
+    }
 });
 
 // --- Event Listener for the Button Click ---
@@ -108,9 +130,11 @@ confirmBurn.addEventListener('click', () => {
     
     if (letterText.value.trim() === '') return;
 
-    burnSound.currentTime = 0;
+    // Play burn sound
+    burnSound.currentTime = 0; // Reset sound to start
+    burnSound.volume = 0.5; // Set appropriate volume
     burnSound.play().catch(error => {
-        console.error("Error playing sound:", error);
+        console.error("Error playing burn sound:", error);
     });
 
     // Apply the selected burn effect
@@ -145,6 +169,11 @@ confirmBurn.addEventListener('click', () => {
         // Reset word count
         updateWordCount();
     }, 1500);
+
+    // Reset all music-related flags and stop any playing music
+    stopCurrentMusic();
+    musicManuallyPaused = false;
+    stopMusicButton.style.display = 'none';
 });
 
 // Close modal when clicking outside
@@ -417,13 +446,35 @@ letterText.addEventListener('input', () => {
             burnEffect.value = moodPattern.effect;
             
             // Special handling for love theme
-            if (mood === 'love') {
-                createLoveParticles();
+            if (mood === 'love' && words.length >= 40 && !isMusicPlaying && !musicManuallyPaused) {
+                stopCurrentMusic();
+                romanticMusic.volume = 0.5;
+                romanticMusic.play().then(() => {
+                    stopMusicButton.style.display = 'block';
+                    isMusicPlaying = true;
+                    currentMusicMode = 'love';
+                    updateMusicButton();
+                }).catch(error => {
+                    console.error("Error playing romantic music:", error);
+                });
+            } 
+            // Special handling for rage theme music
+            else if (mood === 'anger' && words.length >= 30 && !isMusicPlaying && !musicManuallyPaused) {
+                stopCurrentMusic();
+                rageMusic.volume = 0.4; // Slightly lower volume for rage music
+                rageMusic.play().then(() => {
+                    stopMusicButton.style.display = 'block';
+                    isMusicPlaying = true;
+                    currentMusicMode = 'rage';
+                    updateMusicButton();
+                    rageButton.click();
+                }).catch(error => {
+                    console.error("Error playing rage music:", error);
+                });
             }
-            
-            // Special handling for rage mode
-            if (mood === 'anger' && !isRageMode) {
-                rageButton.click(); // Activate rage mode
+            // Handle other moods
+            else if (mood !== 'love' && mood !== 'anger') {
+                stopCurrentMusic();
             }
         }
     }
@@ -518,3 +569,172 @@ document.addEventListener('keydown', (e) => {
         infoModal.classList.remove('show');
     }
 });
+
+// Add music control handlers
+stopMusicButton.addEventListener('click', () => {
+    if (currentMusicMode === 'love') {
+        romanticMusic.pause();
+        romanticMusic.currentTime = 0;
+    } else if (currentMusicMode === 'rage') {
+        rageMusic.pause();
+        rageMusic.currentTime = 0;
+    }
+    stopMusicButton.style.display = 'none';
+    isMusicPlaying = false;
+    musicManuallyPaused = true;
+});
+
+// Add helper function to stop current music
+function stopCurrentMusic() {
+    if (currentMusicMode === 'love') {
+        romanticMusic.pause();
+        romanticMusic.currentTime = 0;
+    } else if (currentMusicMode === 'rage') {
+        rageMusic.pause();
+        rageMusic.currentTime = 0;
+    }
+    isMusicPlaying = false;
+    currentMusicMode = null;
+}
+
+// Add helper function to update music button appearance
+function updateMusicButton() {
+    if (currentMusicMode === 'love') {
+        stopMusicButton.textContent = 'Stop Love Music 💝';
+    } else if (currentMusicMode === 'rage') {
+        stopMusicButton.textContent = 'Stop Rage Music 😠';
+    }
+}
+
+// Modify the existing input event listener for mood detection
+letterText.addEventListener('input', () => {
+    updateWordCount();
+    
+    // Don't check mood too frequently
+    if (Date.now() - lastMoodCheck < MOOD_CHECK_INTERVAL) return;
+    lastMoodCheck = Date.now();
+    
+    const words = letterText.value.trim().split(/\s+/);
+    if (words.length >= 20) {
+        const mood = analyzeMood(letterText.value);
+        if (mood) {
+            // Apply mood-specific changes
+            const moodPattern = moodPatterns[mood];
+            
+            // Change theme
+            document.documentElement.setAttribute('data-mode', moodPattern.theme);
+            
+            // Change burn effect
+            currentBurnEffect = moodPattern.effect;
+            burnEffect.value = moodPattern.effect;
+            
+            // Special handling for love theme
+            if (mood === 'love' && words.length >= 40 && !isMusicPlaying && !musicManuallyPaused) {
+                romanticMusic.volume = 0.5; // Set a comfortable volume
+                romanticMusic.play().then(() => {
+                    stopMusicButton.style.display = 'block';
+                    isMusicPlaying = true;
+                }).catch(error => {
+                    console.error("Error playing music:", error);
+                });
+            }
+            
+            // Special handling for rage mode
+            if (mood === 'anger' && !isRageMode) {
+                rageButton.click();
+            }
+        }
+    }
+});
+
+// Add cleanup for theme changes
+document.addEventListener('themechange', () => {
+    if (isMusicPlaying && document.documentElement.getAttribute('data-mode') !== 'love') {
+        romanticMusic.pause();
+        romanticMusic.currentTime = 0;
+        stopMusicButton.style.display = 'none';
+        isMusicPlaying = false;
+    }
+});
+
+// Add fireplace sound handler
+fireplaceToggle.addEventListener('click', () => {
+    if (!isFireplacePlaying) {
+        fireplaceSound.volume = 0.3; // Set a comfortable volume
+        fireplaceSound.play().then(() => {
+            isFireplacePlaying = true;
+            fireplaceToggle.classList.add('active');
+            // Start particle generation
+            startFireplaceParticles();
+        }).catch(error => {
+            console.error("Error playing fireplace sound:", error);
+        });
+    } else {
+        fireplaceSound.pause();
+        isFireplacePlaying = false;
+        fireplaceToggle.classList.remove('active');
+        // Stop particle generation
+        stopFireplaceParticles();
+    }
+});
+
+let fireplaceParticleInterval;
+
+function startFireplaceParticles() {
+    // Create initial batch of particles
+    for(let i = 0; i < 10; i++) {
+        setTimeout(() => createFireplaceParticles(), i * 100);
+    }
+    
+    // Continue creating particles at interval
+    fireplaceParticleInterval = setInterval(() => {
+        if (Math.random() > 0.7) { // 30% chance to create particle
+            createFireplaceParticles();
+        }
+    }, 200);
+}
+
+function stopFireplaceParticles() {
+    clearInterval(fireplaceParticleInterval);
+}
+
+// Add after your fireplace toggle code
+function createFireplaceParticles() {
+    if (!isFireplacePlaying) return;
+
+    const particle = document.createElement('div');
+    particle.className = 'fireplace-particle';
+    
+    // Random properties
+    const size = 2 + Math.random() * 3;
+    const xDrift = -50 + Math.random() * 100;
+    const startX = Math.random() * window.innerWidth;
+    const duration = 3 + Math.random() * 2;
+    
+    // Set particle properties
+    particle.style.setProperty('--size', `${size}px`);
+    particle.style.setProperty('--x-drift', `${xDrift}px`);
+    particle.style.left = `${startX}px`;
+    particle.style.bottom = '0px';
+    particle.style.animation = `firefly ${duration}s ease-out forwards`;
+    
+    document.body.appendChild(particle);
+    
+    // Cleanup
+    setTimeout(() => {
+        document.body.removeChild(particle);
+    }, duration * 1000);
+}
+
+// Add cleanup when leaving the page
+window.addEventListener('beforeunload', () => {
+    if (isFireplacePlaying) {
+        fireplaceSound.pause();
+        stopFireplaceParticles();
+    }
+});
+
+// Save fireplace state in localStorage
+function saveFireplaceState() {
+    localStorage.setItem('fireplaceOn', isFireplacePlaying);
+}

@@ -1,30 +1,27 @@
 :root {
-    /* Dark theme (default) */
-    --bg-color: #32271c;
-    --text-color: #d8c3a5;
-    --heading-color: #f4e1c1;
-    --textarea-bg: #3b2b1a;
-    --textarea-color: #e6d0b2;
-    --textarea-border: #5a463a;
-    --button-bg: #8b4513;
-    --button-hover: #a0522d;
-    --subtitle-color: #b89b75;
-    --rage-gradient-start: #1a0000;
-    --rage-gradient-end: #660000;
-    --rage-border: #ff0000;
-    --rage-text: #fff;
+    /* Dark theme (default) - Warm, cozy dark colors */
+    --bg-color: #2c2320;          /* Deeper, warmer brown */
+    --text-color: #e6d5c3;        /* Softer cream text */
+    --heading-color: #ffecd1;     /* Warm golden heading */
+    --textarea-bg: #332a26;       /* Rich dark brown */
+    --textarea-color: #f0e6d9;    /* Soft warm white */
+    --textarea-border: #4a3f38;   /* Muted brown border */
+    --button-bg: #95633d;         /* Warm wood brown */
+    --button-hover: #b17849;      /* Lighter warm brown */
+    --subtitle-color: #c4a98d;    /* Muted gold */
 }
 
 [data-theme="light"] {
-    --bg-color: #f5e6d3;
-    --text-color: #2c1810;
-    --heading-color: #4a2511;
-    --textarea-bg: #fff;
-    --textarea-color: #2c1810;
-    --textarea-border: #8b4513;
-    --button-bg: #a0522d;
-    --button-hover: #8b4513;
-    --subtitle-color: #5a463a;
+    /* Light theme - Soft, warm light colors */
+    --bg-color: #fff9f0;          /* Warm off-white */
+    --text-color: #4a3c32;        /* Soft dark brown */
+    --heading-color: #6b4423;     /* Rich brown heading */
+    --textarea-bg: #fffaf5;       /* Cream white */
+    --textarea-color: #3d2f25;    /* Deep warm brown */
+    --textarea-border: #d4b69c;   /* Soft tan border */
+    --button-bg: #c17f59;         /* Warm terracotta */
+    --button-hover: #a35f3b;      /* Deeper terracotta */
+    --subtitle-color: #8c6f5c;    /* Muted brown */
     --rage-gradient-start: #990000;
     --rage-gradient-end: #660000;
     --rage-border: #ff0000;
@@ -72,6 +69,7 @@ h1 {
     margin-bottom: 5px;
     font-size: 2rem;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin-top: 70px; /* Increase top margin to accommodate the buttons */
 }
 
 p {
@@ -92,7 +90,7 @@ textarea {
     border-radius: 8px;
     background-color: var(--textarea-bg);
     color: var(--textarea-color);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     line-height: 1.5;
     resize: vertical;
     transition: opacity 0.6s ease-out, box-shadow 0.3s ease;
@@ -178,6 +176,8 @@ audio {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     transform: scale(0.7);
     transition: transform 0.3s ease;
+    border: 1px solid var(--textarea-border);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
 }
 
 .modal.show .modal-content {
@@ -663,7 +663,7 @@ textarea.burning-fade {
 .primary-button {
     font-size: 1.5rem;
     padding: 15px 40px;
-    background: linear-gradient(45deg, var(--button-bg), #ff4500);
+    background: linear-gradient(45deg, var(--button-bg), color-mix(in srgb, var(--button-bg) 80%, #fff));
     border: none;
     border-radius: 8px;
     color: white;
@@ -787,6 +787,142 @@ textarea.burning-fade {
     margin-top: 20px;
     background: var(--button-bg);
     color: white;
+}
+
+.music-control {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.music-button {
+    background: transparent;
+    border: 2px solid var(--button-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.music-button:hover {
+    opacity: 1;
+    background: var(--textarea-bg);
+    transform: translateY(-2px);
+}
+
+[data-mode="love"] .music-button {
+    border-color: #ff69b4;
+    color: #ff69b4;
+}
+
+[data-mode="rage"] .music-button {
+    border-color: #ff0000;
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+[data-mode="rage"] .music-button:hover {
+    background: rgba(255, 0, 0, 0.1);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("data:image/png;base64,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");
+    opacity: 0.02;
+}
+
+.ambience-control {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    /* Remove bottom positioning */
+}
+
+.ambience-button {
+    background: linear-gradient(45deg, #2c1810, #3a2218);
+    border: 2px solid #8b4513;
+    color: #ffd700;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border-radius: 25px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(139, 69, 19, 0.3);
+}
+
+.ambience-button .flame {
+    font-size: 1.2rem;
+    animation: flicker 1s infinite alternate;
+}
+
+.ambience-button.active {
+    background: linear-gradient(45deg, #3a2218, #4a2d1f);
+    box-shadow: 
+        0 0 15px rgba(255, 125, 0, 0.3),
+        inset 0 0 10px rgba(255, 125, 0, 0.2);
+    border-color: #cd7f32;
+}
+
+@keyframes flicker {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(0.95);
+    }
+}
+
+[data-theme="light"] .ambience-button {
+    background: linear-gradient(45deg, #d4a276, #c68b59);
+    border-color: #8b4513;
+    color: #fff;
+}
+
+[data-theme="light"] .ambience-button.active {
+    background: linear-gradient(45deg, #c68b59, #b67d4a);
+}
+
+/* Add these styles after your other animations */
+@keyframes firefly {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-100px) translateX(var(--x-drift));
+        opacity: 0;
+    }
+}
+
+.fireplace-particle {
+    position: fixed;
+    width: var(--size);
+    height: var(--size);
+    background: radial-gradient(circle at center, #ffb700, #ff4800);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(1px);
+    will-change: transform, opacity;
 }
 
 

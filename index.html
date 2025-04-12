@@ -62,6 +62,27 @@
 
     <audio id="burn-sound" src="burning-sound.mp3" preload="auto"></audio>
 
+    <!-- Add this after your other buttons -->
+    <audio id="romantic-music" src="assets/romantic-melody.mp3" loop></audio>
+    <!-- Add this next to your romantic-music audio element -->
+    <audio id="rage-music" src="assets/rage-melody.mp3" loop></audio>
+    <!-- Add this near your other audio elements -->
+    <audio id="burn-sound" src="assets/burn-sound.mp3"></audio>
+    <!-- Add near your other audio elements -->
+    <audio id="fireplace-sound" src="assets/fire-place-sound.mp3" loop></audio>
+    <div class="music-control">
+        <button id="stop-music" class="music-button" style="display: none">
+            Stop Music 🎵
+        </button>
+    </div>
+
+    <div class="ambience-control">
+        <button id="fireplace-toggle" class="ambience-button">
+            <span class="flame">🔥</span>
+            <span class="button-text">Fireplace</span>
+        </button>
+    </div>
+
     <div id="modal" class="modal">
         <div class="modal-content">
             <h2>Are you sure?</h2>
