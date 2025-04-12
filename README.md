@@ -15,6 +15,7 @@ An interactive web application that provides a therapeutic space for writing and
 - Customizable font styles and sizes
 - Rage mode for intense emotional release
 - Automatic mood detection and theme adaptation
+- Fireplace mode for more cozy writing experience
 
 ### Mood Detection 🎭
 - Analyzes text content for emotional themes
@@ -35,6 +36,7 @@ An interactive web application that provides a therapeutic space for writing and
 2. **Customize**: Choose your preferred font and burning effect
 3. **Release**: Click the "Burn It" button to watch your words disappear
 4. **Let Go**: Experience the therapeutic effect of release
+5. **Save**: You can save the letter if you really want...
 
 ## Technology Stack
 
@@ -48,7 +50,7 @@ An interactive web application that provides a therapeutic space for writing and
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/barisbali/Burn-The-Letter.git
+git clone https://github.com/barisbali/burn-the-letter.git
 ```
 
 2. Open the project directory:
@@ -63,7 +65,7 @@ python -m http.server 8000
 
 ## Usage
 
-Visit the live version at: [https://barisbali.github.io/Burn-The-Letter](https://barisbali.github.io/Burn-The-Letter)
+Visit the live version at: [https://barisbali.github.io/burn-the-letter](https://barisbali.github.io/burn-the-letter)
 
 Or run locally and navigate to `http://localhost:8000`
 
@@ -85,4 +87,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Special thanks to the open-source community
 
 ## Contact
-Project Link: [https://github.com/barisbali/Burn-The-Letter](https://github.com/barsbali/Burn-The-Letter)
+Project Link: [https://github.com/barisbali/burn-the-letter](https://github.com/barsbali/burn-the-letter)
